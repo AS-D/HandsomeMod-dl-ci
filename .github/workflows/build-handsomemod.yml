@@ -82,7 +82,7 @@ jobs:
     - name: Compile the firmware
       id: compile
       run: |
-        cd HandsomeMod
+        cd handsomemod
         echo -e "$(nproc) thread compile"
         make -j$(nproc) || make -j1 V=s || make -j1 V=sc
         echo "::set-output name=status::success"
@@ -98,14 +98,14 @@ jobs:
       uses: actions/upload-artifact@main
       if: steps.compile.outputs.status == 'success' && env.UPLOAD_BIN_DIR == 'true'
       with:
-        name: HandsomeMod_bin${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
-        path: HandsomeMod/bin
+        name: handsomemod_bin${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
+        path: handsomemod/bin
 
     - name: Organize files
       id: organize
       if: env.UPLOAD_FIRMWARE == 'true' && !cancelled()
       run: |
-        cd HandsomeMod/bin/targets/*/*
+        cd handsomemod/bin/targets/*/*
         rm -rf packages
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
         echo "::set-output name=status::success"
@@ -114,5 +114,5 @@ jobs:
       uses: actions/upload-artifact@main
       if: steps.organize.outputs.status == 'success' && !cancelled()
       with:
-        name: HandsomeMod_firmware${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
+        name: handsomemod_firmware${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
         path: ${{ env.FIRMWARE }}
