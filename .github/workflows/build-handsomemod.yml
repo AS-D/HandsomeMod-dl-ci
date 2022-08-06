@@ -19,6 +19,11 @@ on:
     paths:
       - '.config'
   workflow_dispatch:
+     inputs:
+      ssh:
+        description: 'SSH connection to Actions'
+        required: false
+        default: 'false'
 #  schedule:
 #    - cron: 0 8 * * 5
   watch:
@@ -68,7 +73,8 @@ jobs:
 
     - name: Start SSH via tmate
       uses: P3TERX/ssh2actions@main
-      if: env.SSH_ACTIONS == 'true' || contains(github.event.action, 'ssh')
+      #if: env.SSH_ACTIONS == 'true' || contains(github.event.action, 'ssh') 
+      if: (github.event.inputs.ssh == 'true' && github.event.inputs.ssh  != 'false') || contains(github.event.action, 'ssh')
 
     - name: Download package
       id: package
